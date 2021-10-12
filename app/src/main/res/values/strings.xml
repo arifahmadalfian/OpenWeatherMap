@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">OpenWeatherMap</string>
+    <string name="api_key">9548adeb8142fcc0cb867b2aa6c826d3</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
