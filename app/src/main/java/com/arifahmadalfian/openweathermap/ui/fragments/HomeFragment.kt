@@ -51,7 +51,8 @@ class HomeFragment : Fragment() {
 
     var permissionArrays = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION)
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,16 +65,18 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(requireContext()
-                , Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            )
             == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(requireContext()
-                , Manifest.permission.ACCESS_COARSE_LOCATION)
-             == PackageManager.PERMISSION_GRANTED
+            ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
         ) {
             getLocation()
         } else {
-            requestPermissions(permissionArrays,100);
+            requestPermissions(permissionArrays, 100);
         }
 
         observeViewModel()
@@ -149,11 +152,18 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun initView(data: BaseResponse) {
-        binding.ivWeather.setOnClickListener {
-            HomeFragmentDirections.actionHomeFragmentToDetailFragment().also {
-                findNavController().navigate(it)
+
+        adapterMain.onItemClick(object : OnItemClick {
+            override fun onItemClick(position: Int) {
+                HomeFragmentDirections.actionHomeFragmentToDetailFragment(
+                    listItem[position],
+                    "${data.city.name}, ${data.city.country}"
+                ).also {
+                    findNavController().navigate(it)
+                }
+
             }
-        }
+        })
 
         binding.refreshLayout.setOnRefreshListener {
             getLocation()
@@ -166,7 +176,7 @@ class HomeFragment : Fragment() {
         binding.tvTempMin.text =
             String.format(Locale.getDefault(), "%.0f°C", data.list[0].main.tempMin)
         binding.tvStatusWeather.text = data.list[0].weather[0].main
-        binding.ivWeather.load("http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}@2x.png"){
+        binding.ivWeather.load("http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}@2x.png") {
             placeholder(R.drawable.ic_baseline_image_24)
             error(R.drawable.ic_baseline_broken_image_24)
         }
@@ -177,7 +187,8 @@ class HomeFragment : Fragment() {
         viewModel.weatherWeek.observe(viewLifecycleOwner, {
             when (it) {
                 is ResponseState.Error -> {
-                    Toast.makeText(requireContext(), "Gagal menampilkan data!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Gagal menampilkan data!", Toast.LENGTH_SHORT)
+                        .show()
                     binding.pbLoading.isVisible = false
                     binding.refreshLayout.isRefreshing = false
                 }
@@ -201,9 +212,13 @@ class HomeFragment : Fragment() {
         })
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 100 && (grantResults.isNotEmpty()) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)){
+        if (requestCode == 100 && (grantResults.isNotEmpty()) && (grantResults[0] + grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
             getLocation()
         } else {
             Toast.makeText(requireContext(), "Izin Lokasi gagal", Toast.LENGTH_SHORT).show()

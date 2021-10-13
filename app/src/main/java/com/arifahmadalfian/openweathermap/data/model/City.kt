@@ -1,7 +1,10 @@
 package com.arifahmadalfian.openweathermap.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class City(
 
 	@field:SerializedName("country")
@@ -27,5 +30,5 @@ data class City(
 
 	@field:SerializedName("population")
 	val population: Int
-)
+): Parcelable
 

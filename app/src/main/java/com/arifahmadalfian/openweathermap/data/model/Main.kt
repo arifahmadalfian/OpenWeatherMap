@@ -1,7 +1,10 @@
 package com.arifahmadalfian.openweathermap.data.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Main(
 
     @field:SerializedName("temp")
@@ -27,4 +30,4 @@ data class Main(
 
     @field:SerializedName("temp_max")
     val tempMax: Double
-)
+): Parcelable

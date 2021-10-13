@@ -7,12 +7,20 @@ import coil.load
 import com.arifahmadalfian.openweathermap.R
 import com.arifahmadalfian.openweathermap.data.model.ListItem
 import com.arifahmadalfian.openweathermap.databinding.RecyclerItemBinding
+import com.arifahmadalfian.openweathermap.ui.fragments.OnItemClick
 import com.arifahmadalfian.openweathermap.utils.epochToDay
 import java.util.*
 
 class AdapterMain(
     private val items: List<ListItem>
     ) : RecyclerView.Adapter<AdapterMain.ViewHolder>() {
+
+    private var onClickItem: OnItemClick? = null
+
+    fun onItemClick(onClickItem: OnItemClick) {
+        this.onClickItem = onClickItem
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = RecyclerItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -21,6 +29,10 @@ class AdapterMain(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(items[position])
+        holder.itemView.setOnClickListener {
+            onClickItem?.onItemClick(position)
+        }
+
     }
 
     override fun getItemCount(): Int {
