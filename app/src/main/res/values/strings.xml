@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">OpenWeatherMap</string>
     <string name="api_key">9548adeb8142fcc0cb867b2aa6c826d3</string>
-    <string name="humidity">Humidity: %s %</string>
+    <string name="humidity">Humidity: %s </string>
     <string name="wind">Wind: %s km/h NE</string>
     <string name="preassure">Preassure: %s hPa</string>
     <string name="city">Location: %s </string>
+    <string name="tempMax">%.0f°C</string>
+    <string name="tempMin">%.0f°C</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

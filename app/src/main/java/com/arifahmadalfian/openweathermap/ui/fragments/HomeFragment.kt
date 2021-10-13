@@ -48,6 +48,7 @@ class HomeFragment : Fragment() {
     private lateinit var adapterMain: AdapterMain
     private val listItem: MutableList<ListItem> = ArrayList()
     private var baseResponse: BaseResponse? = null
+    private var isSwiftLoading = false
 
     var permissionArrays = arrayOf(
         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -167,14 +168,13 @@ class HomeFragment : Fragment() {
 
         binding.refreshLayout.setOnRefreshListener {
             getLocation()
+            isSwiftLoading = true
         }
 
         binding.tvToday.text = getToday()
         binding.tvLocation.text = "${data.city.name}, ${data.city.country}"
-        binding.tvTempMax.text =
-            String.format(Locale.getDefault(), "%.0f°C", data.list[0].main.tempMax)
-        binding.tvTempMin.text =
-            String.format(Locale.getDefault(), "%.0f°C", data.list[0].main.tempMin)
+        binding.tvTempMax.text = getString(R.string.tempMax, data.list[0].main.tempMax)
+        binding.tvTempMin.text = getString(R.string.tempMin, data.list[0].main.tempMin)
         binding.tvStatusWeather.text = data.list[0].weather[0].main
         binding.ivWeather.load("http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}@2x.png") {
             placeholder(R.drawable.ic_baseline_image_24)
@@ -193,7 +193,11 @@ class HomeFragment : Fragment() {
                     binding.refreshLayout.isRefreshing = false
                 }
                 is ResponseState.Loading -> {
-                    binding.pbLoading.isVisible = true
+                    if (!isSwiftLoading) {
+                        binding.pbLoading.isVisible = true
+                    } else {
+                        isSwiftLoading = false
+                    }
                 }
                 is ResponseState.Success -> {
                     listItem.clear()
