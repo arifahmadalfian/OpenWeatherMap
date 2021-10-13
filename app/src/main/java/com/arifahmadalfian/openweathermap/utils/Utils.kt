@@ -1,45 +1,26 @@
 package com.arifahmadalfian.openweathermap.utils
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
-import coil.size.Scale
-import coil.transform.CircleCropTransformation
-import com.arifahmadalfian.openweathermap.R
+import android.annotation.SuppressLint
+import android.text.format.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
-fun getDateTime(s: String): String? {
-    return try {
-        val sdf = SimpleDateFormat("MM/dd/yyyy")
-        val netDate = Date(s.toLong())
-        sdf.format(netDate)
-    } catch (e: Exception) {
-        e.toString()
-    }
+fun Long.epochToDateTime(): String {
+    val date = Date(this * 1000L)
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSSSS")
+    return sdf.format(date)
 }
 
-fun getDay(s: String): String? {
-    return try {
-        val sdf = SimpleDateFormat("EEEE")
-        val netDate = Date(s.toLong())
-        sdf.format(netDate)
-    } catch (e: Exception) {
-        e.toString()
-    }
+@SuppressLint("SimpleDateFormat")
+fun Long.epochToDay(): String {
+    val date = Date(this * 1000L)
+    val sdf = SimpleDateFormat("EEEE, d MMM yyyy HH:mm")
+    return sdf.format(date)
 }
 
-suspend fun getBitmapUrl(context: Context, url: String?): Bitmap {
-    val loading = ImageLoader(context)
-    val request = ImageRequest.Builder(context)
-        .data(url)
-        .crossfade(true)
-        .transformations(CircleCropTransformation())
-        .scale(Scale.FILL)
-        .build()
-    val result = (loading.execute(request) as SuccessResult).drawable
-    return (result as BitmapDrawable).bitmap
+fun getToday(): String {
+    val date = Calendar.getInstance().time
+    val hariIni = DateFormat.format("EEEE", date) as String
+    val tanggal = DateFormat.format("d MMM yyyy", date) as String
+    return "$hariIni, $tanggal"
 }

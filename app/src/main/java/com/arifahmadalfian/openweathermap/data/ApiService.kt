@@ -8,13 +8,11 @@ import retrofit2.http.Query
 
 interface ApiService {
 
-    //bandung - 9548adeb8142fcc0cb867b2aa6c826d3
-
     @GET("forecast")
     suspend fun getWeatherWeek(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("units")units: String = "metric",
-        @Query("appid") appId: String = "9548adeb8142fcc0cb867b2aa6c826d3"
+        @Query("appid") appId: String = "61916f7fdd2d489a911431c1e5a1a584"
     ): Response<BaseResponse>
 }

@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/cv"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardBackgroundColor="@android:color/white"
-    card_view:cardCornerRadius="1dp"
-    card_view:cardElevation="0dp"
-    card_view:cardMaxElevation="0dp"
-    card_view:cardUseCompatPadding="true">
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="2dp"
+    app:cardMaxElevation="1dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,11 +22,11 @@
             android:id="@+id/iv_item_weather"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_mendung"
             android:scaleType="fitCenter"
-            card_view:layout_constraintBottom_toBottomOf="parent"
-            card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/ic_mendung"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_ites_days"
@@ -35,18 +34,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="Tomorow"
-            android:textSize="22sp"
-            card_view:layout_constraintStart_toEndOf="@+id/iv_item_weather"
-            card_view:layout_constraintTop_toTopOf="@+id/iv_item_weather" />
+            android:textColor="@color/textColor"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_item_weather"
+            app:layout_constraintTop_toTopOf="@+id/iv_item_weather" />
 
         <TextView
             android:id="@+id/tv_item_status_weather"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
             android:text="Clear"
-            card_view:layout_constraintStart_toStartOf="@+id/tv_ites_days"
-            card_view:layout_constraintTop_toBottomOf="@+id/tv_ites_days" />
+            android:textColor="@color/textColor"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="@+id/tv_ites_days"
+            app:layout_constraintTop_toBottomOf="@+id/tv_ites_days" />
 
         <TextView
             android:id="@+id/tv_item_temp_max"
@@ -55,19 +56,21 @@
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:text="16"
+            android:textColor="#BD3803"
             android:textSize="22sp"
-            card_view:layout_constraintEnd_toEndOf="parent"
-            card_view:layout_constraintTop_toTopOf="@+id/tv_ites_days" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tv_ites_days" />
 
         <TextView
             android:id="@+id/tv_item_temp_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="4"
+            android:textColor="#09950F"
             android:textSize="14sp"
-            card_view:layout_constraintEnd_toEndOf="@+id/tv_item_temp_max"
-            card_view:layout_constraintStart_toStartOf="@+id/tv_item_temp_max"
-            card_view:layout_constraintTop_toBottomOf="@+id/tv_item_temp_max" />
+            app:layout_constraintEnd_toEndOf="@+id/tv_item_temp_max"
+            app:layout_constraintStart_toStartOf="@+id/tv_item_temp_max"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_temp_max" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

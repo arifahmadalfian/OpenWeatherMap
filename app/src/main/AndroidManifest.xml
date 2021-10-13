@@ -16,9 +16,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OpenWeatherMap"
         android:usesCleartextTraffic="true">
-        <receiver
-            android:name=".ui.MyServiceLocation"/>
-
         <activity
             android:name=".ui.MainActivity"
             android:exported="true">

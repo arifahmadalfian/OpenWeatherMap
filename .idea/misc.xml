@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/DigitalOasis/OpenWeatherMap/app/src/main/res/layout/activity_main.xml" value="0.20416666666666666" />
-        <entry key="..\:/DigitalOasis/OpenWeatherMap/app/src/main/res/layout/fragment_detail.xml" value="0.20416666666666666" />
+        <entry key="..\:/DigitalOasis/OpenWeatherMap/app/src/main/res/layout/fragment_detail.xml" value="0.22" />
         <entry key="..\:/DigitalOasis/OpenWeatherMap/app/src/main/res/layout/fragment_home.xml" value="0.17527173913043478" />
+        <entry key="..\:/DigitalOasis/OpenWeatherMap/app/src/main/res/layout/item.xml" value="0.10416666666666667" />
+        <entry key="..\:/DigitalOasis/OpenWeatherMap/app/src/main/res/layout/recycler_item.xml" value="0.10364583333333334" />
         <entry key="..\:/Firebase/OpenWeatherMap/app/src/main/res/layout/activity_main.xml" value="0.22" />
         <entry key="..\:/Firebase/OpenWeatherMap/app/src/main/res/layout/recycler_item.xml" value="0.25" />
         <entry key="..\:/Firebase/OpenWeatherMap/app/src/main/res/layout/recycler_item_day.xml" value="0.12092391304347826" />

@@ -1,5 +1,6 @@
 package com.arifahmadalfian.openweathermap.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,9 +17,10 @@ class SharedViewModel @Inject constructor(
     private val repository: Repository
 ) : ViewModel() {
 
-    private var _weatherWeek = MutableLiveData<ResponseState<BaseResponse>>(ResponseState.Empty)
-    val weatherWeek: LiveData<ResponseState<BaseResponse>> get() =  _weatherWeek
+    private var _weatherWeek = MutableLiveData<ResponseState<BaseResponse>>()
+    val weatherWeek: LiveData<ResponseState<BaseResponse>> = _weatherWeek
 
+    //default bandung
     fun getWeatherWeek(
         lat: Double = -6.9039,
         lon: Double = 107.6186)
@@ -30,6 +32,7 @@ class SharedViewModel @Inject constructor(
                 if (response.isSuccessful) {
                     _weatherWeek.value = ResponseState.Success(response.body()!!)
                 }
+                Log.d("observer123", "in viewModel")
             }
         } catch (e: Exception) {
             _weatherWeek.value = ResponseState.Error(e)

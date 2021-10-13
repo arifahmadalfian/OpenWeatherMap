@@ -19,10 +19,10 @@ class MainActivity : AppCompatActivity() {
         _binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.homeFragment) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container) as NavHostFragment
         val navController = navHostFragment.navController
 
-        Navigation.findNavController(this, R.id.homeFragment)
+        Navigation.findNavController(this, R.id.container)
 
     }
 

@@ -6,11 +6,11 @@ import com.google.gson.annotations.SerializedName
 data class Sys(
 
     @field:SerializedName("country")
-    val country: String? = null,
+    val country: String,
 
     @field:SerializedName("sunrise")
-    val sunrise: Int? = null,
+    val sunrise: Int,
 
     @field:SerializedName("sunset")
-    val sunset: Int? = null
+    val sunset: Int
 )

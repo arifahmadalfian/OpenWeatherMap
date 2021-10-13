@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
 import android.text.format.DateFormat
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,7 +19,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.arifahmadalfian.openweathermap.data.model.BaseResponse
@@ -28,6 +30,7 @@ import com.arifahmadalfian.openweathermap.databinding.FragmentHomeBinding
 import com.arifahmadalfian.openweathermap.ui.AdapterMain
 import com.arifahmadalfian.openweathermap.ui.SharedViewModel
 import com.arifahmadalfian.openweathermap.utils.ResponseState
+import com.arifahmadalfian.openweathermap.utils.getToday
 import com.google.android.gms.location.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
@@ -38,7 +41,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: SharedViewModel by activityViewModels()
+    private val viewModel: SharedViewModel by viewModels()
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
@@ -61,10 +64,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (ContextCompat.checkSelfPermission(requireActivity()
+        if (ContextCompat.checkSelfPermission(requireContext()
                 , Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(requireActivity()
+            ContextCompat.checkSelfPermission(requireContext()
                 , Manifest.permission.ACCESS_COARSE_LOCATION)
              == PackageManager.PERMISSION_GRANTED
         ) {
@@ -73,34 +76,29 @@ class HomeFragment : Fragment() {
             requestPermissions(permissionArrays,100);
         }
 
+        observeViewModel()
+
         adapterMain = AdapterMain(listItem)
         with(binding.rvList) {
-            this.layoutManager =
-                LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false)
-            this.setHasFixedSize(true)
+            this.layoutManager = LinearLayoutManager(requireActivity())
             this.adapter = adapterMain
         }
-        adapterMain.notifyDataSetChanged()
-
-        viewModel.getWeatherWeek()
-
-        observeViewModel()
-        initView()
+        baseResponse?.let { initView(it) }
     }
 
     private fun getLocation() {
         fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
+            LocationServices.getFusedLocationProviderClient(context)
         val locationManager: LocationManager =
-            activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+            context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
             || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         ) {
             if (ActivityCompat.checkSelfPermission(
-                    requireActivity(),
+                    requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                    requireActivity(),
+                    requireContext(),
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
@@ -117,6 +115,7 @@ class HomeFragment : Fragment() {
                 val location = it.result
                 if (location != null) {
                     viewModel.getWeatherWeek(lat = location.latitude, lon = location.longitude)
+                    Log.d("listlocation", "${location.latitude} ${location.longitude}")
                 } else {
                     val locationRequest = LocationRequest()
                     with(locationRequest) {
@@ -129,6 +128,7 @@ class HomeFragment : Fragment() {
                         override fun onLocationResult(p0: LocationResult) {
                             val loc = p0.lastLocation
                             viewModel.getWeatherWeek(lat = loc.latitude, lon = loc.longitude)
+                            Log.d("listloc", "${loc.latitude} ${loc.longitude}")
                         }
                     }
                     fusedLocationProviderClient.requestLocationUpdates(
@@ -147,56 +147,29 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun initView() {
+    @SuppressLint("SetTextI18n")
+    private fun initView(data: BaseResponse) {
+        binding.ivWeather.setOnClickListener {
+            HomeFragmentDirections.actionHomeFragmentToDetailFragment().also {
+                findNavController().navigate(it)
+            }
+        }
+
         binding.refreshLayout.setOnRefreshListener {
             getLocation()
         }
 
-        val date = Calendar.getInstance().time
-        val hariIni = DateFormat.format("EEEE", date) as String
-        val tanggal = DateFormat.format("d MMM yyyy", date) as String
-        val formatDate = "$hariIni, $tanggal"
-        binding.tvToday.text = formatDate
-        binding.tvLocation.text = ("${baseResponse?.city?.name}, ${baseResponse?.city?.country}")
+        binding.tvToday.text = getToday()
+        binding.tvLocation.text = "${data.city.name}, ${data.city.country}"
         binding.tvTempMax.text =
-            String.format(Locale.getDefault(), "%.0f°C", baseResponse?.list?.get(0)?.main?.tempMax)
+            String.format(Locale.getDefault(), "%.0f°C", data.list[0].main.tempMax)
         binding.tvTempMin.text =
-            String.format(Locale.getDefault(), "%.0f°C", baseResponse?.list?.get(0)?.main?.tempMin)
-        binding.tvStatusWeather.text = ("${baseResponse?.list?.get(0)?.weather?.get(0)?.main}")
-        binding.ivWeather.load("http://openweathermap.org/img/wn/${baseResponse?.list?.get(0)?.weather?.get(0)?.icon}@2x.png"){
+            String.format(Locale.getDefault(), "%.0f°C", data.list[0].main.tempMin)
+        binding.tvStatusWeather.text = data.list[0].weather[0].main
+        binding.ivWeather.load("http://openweathermap.org/img/wn/${data.list[0].weather[0].icon}@2x.png"){
             placeholder(R.drawable.ic_baseline_image_24)
             error(R.drawable.ic_baseline_broken_image_24)
         }
-
-//        when (baseResponse?.list?.get(0)?.weather?.get(0)?.description) {
-//            "broken clouds" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_berawan) }
-//            }
-//            "light rain" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_hujan_gerimis)}
-//            }
-//            "overcast clouds" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_mendung)}
-//            }
-//            "moderate rain" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_hujan_lebat)}
-//            }
-//            "few clouds" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_mendung)}
-//            }
-//            "heavy intensity rain" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_hujan_petir)}
-//            }
-//            "clear sky" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_panas)}
-//            }
-//            "scattered clouds" -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_hujan_lebat)}
-//            }
-//            else -> {
-//                binding?.let { Glide.with(it?.ivWeather).load(R.drawable.ic_hujan_lebat)}
-//            }
-//        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -204,8 +177,7 @@ class HomeFragment : Fragment() {
         viewModel.weatherWeek.observe(viewLifecycleOwner, {
             when (it) {
                 is ResponseState.Error -> {
-                    Toast.makeText(requireContext(), "Gagal menampilkan data!", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(requireContext(), "Gagal menampilkan data!", Toast.LENGTH_SHORT).show()
                     binding.pbLoading.isVisible = false
                     binding.refreshLayout.isRefreshing = false
                 }
@@ -221,7 +193,7 @@ class HomeFragment : Fragment() {
                         listItem.add(it.data.list[i])
                     }
                     adapterMain.notifyDataSetChanged()
-                    initView()
+                    initView(it.data)
                 }
                 is ResponseState.Empty -> {
                 }

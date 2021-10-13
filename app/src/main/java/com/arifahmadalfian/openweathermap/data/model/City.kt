@@ -5,27 +5,27 @@ import com.google.gson.annotations.SerializedName
 data class City(
 
 	@field:SerializedName("country")
-	val country: String? = null,
+	val country: String,
 
 	@field:SerializedName("coord")
-	val coord: Coord? = null,
+	val coord: Coord,
 
 	@field:SerializedName("sunrise")
-	val sunrise: Int? = null,
+	val sunrise: Int,
 
 	@field:SerializedName("timezone")
-	val timezone: Int? = null,
+	val timezone: Int,
 
 	@field:SerializedName("sunset")
-	val sunset: Int? = null,
+	val sunset: Int,
 
 	@field:SerializedName("name")
-	val name: String? = null,
+	val name: String,
 
 	@field:SerializedName("id")
-	val id: Int? = null,
+	val id: Int,
 
 	@field:SerializedName("population")
-	val population: Int? = null
+	val population: Int
 )
 
