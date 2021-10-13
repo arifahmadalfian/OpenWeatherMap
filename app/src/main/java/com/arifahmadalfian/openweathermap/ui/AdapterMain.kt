@@ -45,6 +45,7 @@ class AdapterMain(
                 tvItesDays.text = item.dt.toLong().epochToDay()
                 tvItemTempMin.text = String.format(Locale.getDefault(), "%.0f°C", item.main.tempMin)
                 tvItemTempMax.text = String.format(Locale.getDefault(), "%.0f°C", item.main.tempMax)
+                tvItemStatusWeather.text = item.weather[0].main
                 ivItemWeather.load("http://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png"){
                     placeholder(R.drawable.ic_baseline_image_24)
                     error(R.drawable.ic_baseline_broken_image_24)
